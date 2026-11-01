@@ -4,7 +4,7 @@ Concept project by **Zyqor Studio**. Ferneau is a **fictional** botanical hair-c
 
 Live: https://ferneau-concept.vercel.app/ · App in a phone frame: https://ferneau-concept.vercel.app/app/ · Admin: https://ferneau-concept.vercel.app/admin/
 
-Deployed on Vercel (static, no build step; output directory `web/site`, see `vercel.json`).
+Deployed on Vercel (static, no build step; output directory `web/site`, see `vercel.json`); every push to `main` redeploys.
 
 ## What is in here
 | Folder | What |
