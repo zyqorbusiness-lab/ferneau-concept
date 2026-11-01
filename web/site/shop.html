@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Shop — Ferneau (concept)</title><meta name="description" content="Search and filter the Ferneau range: shampoo, conditioner, masks, oils and styling."><meta name="theme-color" content="#F4F1E8">
+<meta property="og:title" content="Shop — Ferneau (concept)"><meta property="og:description" content="Search and filter the Ferneau range: shampoo, conditioner, masks, oils and styling."><meta property="og:image" content="/img/ui/og.jpg"><meta name="robots" content="noindex">
+<link rel="icon" href="/img/ui/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/fraunces-opsz.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/dmsans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/base.css"><link rel="stylesheet" href="/css/site.css"><script type="importmap">{"imports":{"three":"/vendor/three/three.module.min.js","three/addons/":"/vendor/three/addons/"}}</script></head><body>
+<main>
+<div class="wrap"><div class="page-head"><span class="eyebrow">The range</span><h1 style="margin-top:12px">Shop <em class="i">Ferneau</em></h1></div>
+<div class="shopbar">
+ <label class="search"><span class="sr">Search products</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-4.35-4.35"/></svg><input class="input" id="q" type="search" placeholder="Search rosemary, frizz, mask…" autocomplete="off"></label>
+ <div class="chips" id="cats" role="group" aria-label="Category"></div>
+ <div class="filters"><label class="sr" for="ht">Hair type</label><select class="sel" id="ht"></select><label class="sr" for="cn">Concern</label><select class="sel" id="cn"></select>
+  <label class="sr" for="so">Sort</label><select class="sel" id="so"><option value="popular">Most popular</option><option value="rating">Top rated</option><option value="price_asc">Price: low to high</option><option value="price_desc">Price: high to low</option></select>
+  <label class="tog"><input type="checkbox" id="stk"> In stock only</label><span class="count" id="count" aria-live="polite"></span></div>
+</div>
+<div class="grid" id="grid" style="padding-bottom:90px"></div></div></main>
+<script type="module">
+import { mountChrome, card, wireCards, db, icon, toast, money, refreshBadges } from '/js/chrome.js';
+mountChrome();
+
+const u = new URLSearchParams(location.search); const st = { search: u.get('q') || '', category: u.get('category') || 'All', hairType: u.get('hairType') || 'All', concern: u.get('concern') || 'All', sort: 'popular', inStock: false };
+const $ = (id) => document.getElementById(id); const q = $('q'); q.value = st.search; if (u.get('focus')) q.focus();
+$('cats').innerHTML = db.FILTERS.categories.map((c) => `<button class="chip" aria-pressed="${c === st.category}" data-c="${c}">${c}</button>`).join('');
+$('ht').innerHTML = db.FILTERS.hairTypes.map((c) => `<option value="${c}">${c === 'All' ? 'All hair types' : c}</option>`).join(''); $('ht').value = st.hairType;
+$('cn').innerHTML = db.FILTERS.concerns.map((c) => `<option value="${c}">${c === 'All' ? 'All concerns' : c}</option>`).join(''); $('cn').value = st.concern;
+const grid = $('grid'); wireCards(grid); let seq = 0;
+async function run() {
+  const my = ++seq; const [ps, w] = await Promise.all([db.listProducts(st), db.getWishlist()]); if (my !== seq) return;
+  $('count').textContent = ps.length + (ps.length === 1 ? ' product' : ' products');
+  grid.innerHTML = ps.length ? ps.map((p) => card(p, w)).join('') : '<div class="empty" style="grid-column:1/-1"><h3>No match yet</h3><p style="margin-top:8px">Try another word or clear a filter.</p></div>';
+  const p = new URLSearchParams(); if (st.search) p.set('q', st.search); if (st.category !== 'All') p.set('category', st.category); if (st.hairType !== 'All') p.set('hairType', st.hairType); if (st.concern !== 'All') p.set('concern', st.concern);
+  history.replaceState(null, '', '/shop.html' + (p.toString() ? '?' + p : ''));
+}
+let tmo; q.addEventListener('input', () => { clearTimeout(tmo); tmo = setTimeout(() => { st.search = q.value.trim(); run(); }, 160); });
+$('cats').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (!b) return; st.category = b.dataset.c; $('cats').querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', c === b)); run(); });
+$('ht').onchange = (e) => { st.hairType = e.target.value; run(); }; $('cn').onchange = (e) => { st.concern = e.target.value; run(); }; $('so').onchange = (e) => { st.sort = e.target.value; run(); }; $('stk').onchange = (e) => { st.inStock = e.target.checked; run(); };
+run();
+</script></body></html>

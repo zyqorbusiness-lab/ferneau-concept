@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Account — Ferneau (concept)</title><meta name="description" content="Log in, edit your profile, see your orders and wishlist."><meta name="theme-color" content="#F4F1E8">
+<meta property="og:title" content="Account — Ferneau (concept)"><meta property="og:description" content="Log in, edit your profile, see your orders and wishlist."><meta property="og:image" content="/img/ui/og.jpg"><meta name="robots" content="noindex">
+<link rel="icon" href="/img/ui/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/fraunces-opsz.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/dmsans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/base.css"><link rel="stylesheet" href="/css/site.css"><script type="importmap">{"imports":{"three":"/vendor/three/three.module.min.js","three/addons/":"/vendor/three/addons/"}}</script></head><body>
+<main>
+<div class="wrap" style="padding-bottom:90px"><div class="page-head"><span class="eyebrow">Account</span><h1 style="margin-top:12px" id="hi">Your <em class="i">Ferneau</em></h1></div><div id="acc"></div>
+<section id="wishlist" style="margin-top:56px"><div class="sec-head"><h2 style="font-size:clamp(28px,3vw,44px)">Wish<em class="i">list</em></h2></div><div class="grid" id="wl"></div></section></div></main>
+<script type="module">
+import { mountChrome, card, wireCards, db, icon, toast, money, refreshBadges } from '/js/chrome.js';
+mountChrome();
+
+const $ = (id) => document.getElementById(id); const acc = $('acc');
+async function drawWish() { const w = await db.getWishlist(); const all = await db.listProducts({}); const ps = all.filter((p) => w.includes(p.id)); $('wl').innerHTML = ps.length ? ps.map((p) => card(p, w)).join('') : '<div class="panel empty" style="grid-column:1/-1">Tap the heart on any product to save it here.</div>'; }
+wireCards($('wl')); db.subscribe((k) => { if (k === 'ferneau.wish.v1') drawWish(); });
+async function draw() {
+  const u = await db.currentUser();
+  if (!u) {
+    acc.innerHTML = `<div class="auth"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-t="in">Log in</button><button role="tab" aria-selected="false" data-t="up">Sign up</button></div>
+     <form class="panel" id="af" style="display:grid;gap:14px" novalidate><div class="field" id="nmf" hidden><label for="an">Name</label><input class="input" id="an" autocomplete="name"></div>
+     <div class="field"><label for="ae">Email</label><input class="input" id="ae" type="email" autocomplete="email" value="demo@ferneau.example"></div><div class="field"><label for="ap">Password</label><input class="input" id="ap" type="password" autocomplete="current-password" value="demo1234"></div>
+     <span class="err" id="aerr" role="alert"></span><button class="btn" id="asub">Log in</button><p class="muted" style="font-size:13px">Demo login: demo@ferneau.example / demo1234 (pre-filled).</p></form></div>`;
+    let mode = 'in'; acc.querySelectorAll('[data-t]').forEach((b) => b.onclick = () => { mode = b.dataset.t; acc.querySelectorAll('[data-t]').forEach((x) => x.setAttribute('aria-selected', x === b)); $('nmf').hidden = mode === 'in'; $('asub').textContent = mode === 'in' ? 'Log in' : 'Create account'; if (mode === 'up') { $('ae').value = ''; $('ap').value = ''; } });
+    $('af').onsubmit = async (e) => { e.preventDefault(); $('aerr').textContent = ''; try { if (mode === 'in') await db.login($('ae').value, $('ap').value); else await db.signup({ name: $('an').value.trim(), email: $('ae').value, password: $('ap').value }); toast('Welcome to Ferneau'); draw(); } catch (err) { $('aerr').textContent = err.message; } };
+    return;
+  }
+  $('hi').innerHTML = `Hello, <em class="i">${u.name.split(' ')[0]}</em>`;
+  const os = await db.listOrders(u.email);
+  acc.innerHTML = `<div class="two"><div><h3 style="margin-bottom:16px">Your orders</h3><div class="olist">${os.length ? os.map((o) => `<a class="orow" href="/track.html?id=${o.id}"><b>${o.id}</b><span class="st ${o.status}">${db.STATUS_LABEL[o.status]}</span><span class="muted">${new Date(o.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} · ${o.items.length} item${o.items.length > 1 ? 's' : ''} · ${money(o.total)}</span><span class="muted">Track →</span></a>`).join('') : '<div class="panel empty">No orders yet. <a href="/shop.html">Start shopping</a></div>'}</div></div>
+   <form class="panel summary" id="pf"><h3>Profile</h3><div class="field"><label for="pn">Name</label><input class="input" id="pn" value="${u.name || ''}"></div><div class="field"><label for="pp">Phone</label><input class="input" id="pp" value="${u.phone || ''}"></div><div class="field"><label for="pa">Address</label><input class="input" id="pa" value="${u.address || ''}"></div>
+   <button class="btn">Save profile</button><div style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn ghost sm" id="lo">Log out</button><button type="button" class="btn ghost sm" id="rs">Reset demo data</button></div><p class="muted" style="font-size:12.5px">${u.email} · concept account, stored only in this browser.</p></form></div>`;
+  $('pf').onsubmit = async (e) => { e.preventDefault(); await db.updateProfile({ name: $('pn').value.trim(), phone: $('pp').value.trim(), address: $('pa').value.trim() }); toast('Profile saved'); };
+  $('lo').onclick = async () => { await db.logout(); location.reload(); }; $('rs').onclick = async () => { await db.resetDemo(); toast('Demo data reset'); draw(); drawWish(); refreshBadges(); };
+}
+draw(); drawWish();
+</script></body></html>

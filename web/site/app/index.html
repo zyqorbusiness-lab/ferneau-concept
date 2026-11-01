@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ferneau app — React Native + Expo demo (concept)</title><meta name="description" content="Try the Ferneau shopping app in your browser: one React Native + Expo codebase for iOS, Android and web."><meta name="theme-color" content="#F4F1E8">
+<meta property="og:title" content="Ferneau app — React Native + Expo demo (concept)"><meta property="og:description" content="Try the Ferneau shopping app in your browser: one React Native + Expo codebase for iOS, Android and web."><meta property="og:image" content="/img/ui/og.jpg"><meta name="robots" content="noindex">
+<link rel="icon" href="/img/ui/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/fraunces-opsz.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/dmsans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/base.css"><link rel="stylesheet" href="/css/site.css"><script type="importmap">{"imports":{"three":"/vendor/three/three.module.min.js","three/addons/":"/vendor/three/addons/"}}</script><style>
+.appwrap{display:grid;grid-template-columns:1fr auto;gap:64px;align-items:center;padding:48px 0 100px}
+.frame{width:min(410px,92vw,calc((100svh - 150px) * 0.4745));min-width:300px;aspect-ratio:410/864;background:var(--fern);border-radius:58px;padding:12px;box-shadow:0 2px 0 #1a382c inset,0 40px 90px rgba(31,58,47,.32),0 0 0 1px rgba(31,58,47,.2);position:relative}
+.frame::before{content:"";position:absolute;top:22px;left:50%;transform:translateX(-50%);width:110px;height:30px;border-radius:20px;background:#173326;z-index:2}
+.frame iframe{width:100%;height:100%;border:0;border-radius:46px;background:var(--paper);display:block}
+.feat{list-style:none;padding:0;margin:26px 0;display:grid;gap:0}.feat li{padding:13px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:26px 1fr;gap:10px;font-size:15px}.feat svg{color:var(--clay);margin-top:3px}
+.how{display:grid;gap:10px;font-size:14px}.how code{background:var(--paper2);padding:3px 8px;border-radius:6px;font-size:13px}
+@media (max-width:960px){.appwrap{grid-template-columns:1fr;gap:36px;justify-items:center}.appwrap>div:first-child{justify-self:stretch}.frame{border-radius:46px;padding:9px}.frame iframe{border-radius:38px}.frame::before{top:16px;width:90px;height:24px}}
+</style></head><body><main><div class="wrap appwrap">
+<div><span class="eyebrow">Mobile app · React Native + Expo</span><h1 style="margin:14px 0 20px;font-size:clamp(42px,5.4vw,80px)">The Ferneau <em class="i">app</em></h1>
+<p class="lede muted" style="font-size:18px;max-width:46ch">One TypeScript codebase that builds for iOS, Android and the web. This is the real app, exported for the browser and running live in the phone frame. Tap around: it shares its account, bag and orders with the website and the admin.</p>
+<ul class="feat" id="feat">
+<li>✓<span><b>Onboarding, login &amp; sign-up</b> with a demo account and guest mode</span></li>
+<li>✓<span><b>Catalogue, search &amp; filters</b>: category, hair type, concern, sort, in stock</span></li>
+<li>✓<span><b>Product pages, wishlist and bag</b> with coupon ROOTS10 and free-shipping rule</span></li>
+<li>✓<span><b>Checkout with a demo payment gateway</b>: UPI, test card 4242…, cash on delivery</span></li>
+<li>✓<span><b>Order history and live tracking</b>: change a status in the <a href="/admin/">admin</a> and watch it move</span></li>
+</ul>
+<div class="ctas" style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="/app/expo/" target="_blank" rel="noopener">Open full screen</a><a class="btn ghost" href="/admin/">Open the admin</a></div>
+<div class="how" style="margin-top:28px"><span class="eyebrow">Run it on a phone</span><span class="muted">Source: Expo SDK project in TypeScript. <code>npx expo start</code> opens it in Expo Go on iOS and Android; <code>npx expo export -p web</code> builds this browser version. A signed Android APK (EAS Build) is the next step.</span></div>
+</div>
+<div class="frame"><iframe src="/app/expo/" title="Ferneau app running in a phone frame" loading="eager"></iframe></div>
+</div></main>
+<script type="module">
+import { mountChrome } from '/js/chrome.js'; mountChrome();
+document.querySelectorAll('#feat li').forEach((li) => { li.firstChild.replaceWith(Object.assign(document.createElement('span'), { innerHTML: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>' })); });
+</script></body></html>

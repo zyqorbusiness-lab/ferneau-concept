@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "Ferneau",
+    "slug": "ferneau-concept",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "studio.zyqor.ferneau"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#F4F1E8",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "studio.zyqor.ferneau"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "output": "single",
+      "name": "Ferneau \u2014 concept app",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-font"
+    ],
+    "experiments": {
+      "baseUrl": "/app/expo"
+    },
+    "backgroundColor": "#F4F1E8"
+  }
+}

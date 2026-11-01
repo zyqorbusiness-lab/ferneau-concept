@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Track your order — Ferneau (concept)</title><meta name="description" content="Order tracking timeline for the Ferneau demo store."><meta name="theme-color" content="#F4F1E8">
+<meta property="og:title" content="Track your order — Ferneau (concept)"><meta property="og:description" content="Order tracking timeline for the Ferneau demo store."><meta property="og:image" content="/img/ui/og.jpg"><meta name="robots" content="noindex">
+<link rel="icon" href="/img/ui/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/fraunces-opsz.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/dmsans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/base.css"><link rel="stylesheet" href="/css/site.css"><script type="importmap">{"imports":{"three":"/vendor/three/three.module.min.js","three/addons/":"/vendor/three/addons/"}}</script></head><body>
+<main>
+<div class="wrap" style="padding-bottom:90px"><div class="page-head"><span class="eyebrow">Order tracking</span><h1 style="margin-top:12px">Where's my <em class="i">order?</em></h1></div>
+<form id="tf" class="panel" style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;max-width:640px;margin-bottom:28px"><div class="field" style="flex:1;min-width:200px"><label for="oid">Order number</label><input class="input" id="oid" placeholder="e.g. FN10425"></div><button class="btn">Track</button></form>
+<div id="out"></div></div></main>
+<script type="module">
+import { mountChrome, card, wireCards, db, icon, toast, money, refreshBadges } from '/js/chrome.js';
+mountChrome();
+
+const $ = (id) => document.getElementById(id); const u = new URLSearchParams(location.search); const last = JSON.parse(localStorage.getItem('ferneau.lastOrder') || 'null');
+let id = u.get('id') || (last && last.id) || 'FN10425'; $('oid').value = id;
+$('tf').onsubmit = (e) => { e.preventDefault(); id = $('oid').value.trim(); history.replaceState(null, '', '/track.html?id=' + id); draw(); };
+async function draw() {
+  const o = await db.getOrder(id);
+  if (!o) { $('out').innerHTML = `<div class="panel empty"><h3>No order ${id} found</h3><p style="margin-top:8px">Demo orders: FN10421 to FN10426, or place one in the shop.</p></div>`; return; }
+  const idx = db.STATUSES.indexOf(o.status); const at = (s) => (o.history.find((h) => h.status === s) || {}).at;
+  const fmt = (t) => new Date(t).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+  const desc = { placed: 'We have your order and payment confirmation.', packed: 'Packed in a recycled box at our Kolkata studio.', shipped: 'Handed to the courier.', out_for_delivery: 'With your delivery partner today.', delivered: 'Delivered. Enjoy wash day.' };
+  $('out').innerHTML = `<div class="two"><div class="panel"><div style="display:flex;justify-content:space-between;align-items:start;gap:12px;flex-wrap:wrap;margin-bottom:26px"><div><span class="eyebrow">Order ${o.id}${o.demo ? ' · sample order' : ''}</span><h3 style="margin-top:8px;font-size:30px">${o.status === 'cancelled' ? 'Cancelled' : o.status === 'delivered' ? 'Delivered' : 'Arriving ' + db.eta(o)}</h3></div><span class="st ${o.status}">${db.STATUS_LABEL[o.status]}</span></div>
+   <ol class="timeline">${db.STATUSES.map((s, i) => `<li class="${i < idx || o.status === 'delivered' ? 'done' : ''} ${i === idx && o.status !== 'delivered' ? 'now' : ''} ${i <= idx ? 'done' : ''}"><span class="dot">${i <= idx ? icon('check', 16) : ''}</span><div><b>${db.STATUS_LABEL[s]}</b><span>${at(s) ? fmt(at(s)) + ' · ' + desc[s] : 'Pending'}</span></div></li>`).join('')}</ol>
+   ${o.status !== 'delivered' && o.status !== 'cancelled' ? '<button class="btn ghost sm" id="adv">Simulate next step (demo)</button>' : ''}<p class="muted" style="font-size:13px;margin-top:14px">Status changes made in the <a href="/admin/">admin dashboard</a> appear here live.</p></div>
+   <aside class="panel summary"><h3>Items</h3>${o.items.map((l) => `<div class="r"><span>${l.qty} × ${l.name}</span><span>${money(l.price * l.qty)}</span></div>`).join('')}<div class="r tot"><span>Total</span><span>${money(o.total)}</span></div><div class="muted" style="font-size:13.5px">${o.name}${o.city ? ' · ' + o.city : ''}<br>Paid with: ${o.payment}</div></aside></div>`;
+  const a = $('adv'); if (a) a.onclick = async () => { await db.advanceOrder(o.id); draw(); };
+}
+db.subscribe((k) => { if (k === 'ferneau.db.v1') draw(); }); draw();
+</script></body></html>

@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Your bag — Ferneau (concept)</title><meta name="description" content="Your Ferneau bag."><meta name="theme-color" content="#F4F1E8">
+<meta property="og:title" content="Your bag — Ferneau (concept)"><meta property="og:description" content="Your Ferneau bag."><meta property="og:image" content="/img/ui/og.jpg"><meta name="robots" content="noindex">
+<link rel="icon" href="/img/ui/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/fraunces-opsz.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/dmsans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/base.css"><link rel="stylesheet" href="/css/site.css"><script type="importmap">{"imports":{"three":"/vendor/three/three.module.min.js","three/addons/":"/vendor/three/addons/"}}</script></head><body>
+<main>
+<div class="wrap"><div class="page-head"><h1>Your <em class="i">bag</em></h1></div><div class="two" id="two"></div></div></main>
+<script type="module">
+import { mountChrome, card, wireCards, db, icon, toast, money, refreshBadges } from '/js/chrome.js';
+mountChrome();
+
+const box = document.getElementById('two'); let coupon = sessionStorage.getItem('fn.coupon') || '';
+async function draw() {
+  const c = await db.cartDetail(coupon);
+  if (!c.lines.length) { box.innerHTML = `<div class="panel empty" style="grid-column:1/-1"><h3>Your bag is empty</h3><p style="margin:10px 0 20px">Start with the bestseller: Rosemary Root Shampoo.</p><a class="btn" href="/shop.html">Go to the shop</a></div>`; return; }
+  box.innerHTML = `<div>${c.lines.map((l) => `<div class="line"><img src="/${l.product.image}" alt="${l.product.name}"><div style="display:grid;gap:6px"><a class="nm" href="/product.html?id=${l.id}" style="text-decoration:none">${l.product.name}</a><span class="muted" style="font-size:13.5px">${l.product.size} · ${money(l.product.price)}</span>
+   <div style="display:flex;gap:14px;align-items:center"><div class="qty" style="height:40px"><button data-q="${l.id}" data-d="-1" aria-label="Decrease">${icon('minus', 16)}</button><span>${l.qty}</span><button data-q="${l.id}" data-d="1" aria-label="Increase">${icon('plus', 16)}</button></div><button class="rm" data-rm="${l.id}">Remove</button></div></div><b>${money(l.product.price * l.qty)}</b></div>`).join('')}</div>
+   <aside class="panel summary"><h3>Order summary</h3>
+    <div class="coupon"><label class="sr" for="cp">Coupon</label><input class="input" id="cp" placeholder="Coupon (try ROOTS10)" value="${coupon}"><button class="btn sm ghost" id="ap">Apply</button></div>
+    <div class="r"><span>Subtotal (${c.count} items)</span><span>${money(c.subtotal)}</span></div>${c.discount ? `<div class="r" style="color:var(--clay-ink)"><span>ROOTS10</span><span>−${money(c.discount)}</span></div>` : ''}
+    <div class="r"><span>Shipping</span><span>${c.shipping ? money(c.shipping) : 'Free'}</span></div>${c.shipping ? `<div class="muted" style="font-size:13px">Add ${money(999 - (c.subtotal - c.discount))} more for free shipping</div>` : ''}
+    <div class="r tot"><span>Total</span><span>${money(c.total)}</span></div><a class="btn" href="/checkout.html">${icon('lock', 18)} Checkout</a><p class="muted" style="font-size:12.5px;text-align:center">Demo store: the payment step is a simulation.</p></aside>`;
+}
+box.addEventListener('click', async (e) => {
+  const q = e.target.closest('[data-q]'), rm = e.target.closest('[data-rm]');
+  if (q) { const c = await db.getCart(); const l = c.find((x) => x.id === q.dataset.q); await db.setQty(l.id, l.qty + +q.dataset.d); draw(); }
+  if (rm) { await db.setQty(rm.dataset.rm, 0); draw(); }
+  if (e.target.id === 'ap') { coupon = document.getElementById('cp').value.trim().toUpperCase(); sessionStorage.setItem('fn.coupon', coupon); const c = await db.cartDetail(coupon); toast(c.discount ? 'ROOTS10 applied: 10% off' : 'That code is not valid in this demo. Try ROOTS10.'); draw(); }
+});
+draw();
+</script></body></html>

@@ -1,0 +1,18 @@
+<!doctype html><html><head><meta charset="utf-8"><title>render</title>
+<link rel="stylesheet" href="/css/base.css"><script type="importmap">{"imports":{"three":"/vendor/three/three.module.min.js","three/addons/":"/vendor/three/addons/"}}</script>
+<style>html,body{margin:0;background:transparent} canvas{display:block;width:100vw;height:100vh}</style></head>
+<body><canvas id="c"></canvas><script type="module">
+import { THREE, makeRenderer, studio, buildProduct, contactShadow, fontsReady, fitDistance } from '/js/ferneau3d.js';
+import CAT from '/js/catalog.js';
+await fontsReady();
+const q=new URLSearchParams(location.search); const p=CAT.products.find(x=>x.id===(q.get('id')||'p01'));
+const c=document.getElementById('c'); const r=makeRenderer(c,{coarse:false}); r.setPixelRatio(1); r.setSize(innerWidth,innerHeight,false);
+const scene=new THREE.Scene(); studio(r,scene,false);
+const cam=new THREE.PerspectiveCamera(26,innerWidth/innerHeight,0.05,60);
+const g=buildProduct(p); const h=g.userData.height; scene.add(g); scene.add(contactShadow(p.form==='jar'?1.15:0.85,0.55));
+g.rotation.y=+(q.get('ry')||-0.42);
+const rad=Math.max(h*0.55, p.form==='jar'?0.85:0.6); const d=fitDistance(cam,rad,+(q.get('fill')||0.86));
+const el=+(q.get('el')||0.16);
+cam.position.set(0,h*0.5+Math.sin(el)*d,Math.cos(el)*d); cam.lookAt(0,h*0.47,0);
+r.render(scene,cam); requestAnimationFrame(()=>{r.render(scene,cam); document.body.dataset.ready='1';});
+</script></body></html>

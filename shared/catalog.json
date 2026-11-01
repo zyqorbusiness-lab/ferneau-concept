@@ -1,0 +1,401 @@
+{
+ "brand": "Ferneau",
+ "currency": "INR",
+ "products": [
+  {
+   "id": "p01",
+   "slug": "rosemary-root-shampoo",
+   "name": "Rosemary Root Shampoo",
+   "category": "Shampoo",
+   "form": "pump",
+   "size": "300 ml",
+   "price": 649,
+   "mrp": 749,
+   "hairTypes": [
+    "Oily",
+    "Fine",
+    "All"
+   ],
+   "concerns": [
+    "Scalp care",
+    "Volume"
+   ],
+   "stock": 84,
+   "badge": "Bestseller",
+   "colors": {
+    "bottle": "#CFE1D3",
+    "liquid": "#7FA889",
+    "cap": "#234A3A",
+    "label": "#F4F1E8",
+    "accent": "#3E7A55"
+   },
+   "short": "Daily clarifying wash with rosemary leaf and pea sprout for a calm, light scalp.",
+   "ingredients": [
+    "Rosemary leaf extract",
+    "Pea sprout",
+    "Willow bark",
+    "Mild coco-glucoside"
+   ],
+   "howto": "Massage into a wet scalp for 60 seconds, rinse, repeat if needed.",
+   "rating": 4.6,
+   "reviews": 56,
+   "image": "img/products/p01.webp",
+   "desc": "Daily clarifying wash with rosemary leaf and pea sprout for a calm, light scalp."
+  },
+  {
+   "id": "p02",
+   "slug": "rice-water-repair-conditioner",
+   "name": "Rice Water Repair Conditioner",
+   "category": "Conditioner",
+   "form": "tube",
+   "size": "200 ml",
+   "price": 599,
+   "mrp": 699,
+   "hairTypes": [
+    "Dry",
+    "Colour-treated",
+    "All"
+   ],
+   "concerns": [
+    "Repair",
+    "Frizz"
+   ],
+   "stock": 56,
+   "badge": "New",
+   "colors": {
+    "bottle": "#F2EDE1",
+    "liquid": "#EDE6D3",
+    "cap": "#C9A97A",
+    "label": "#F2EDE1",
+    "accent": "#B08850"
+   },
+   "short": "Fermented rice water and oat protein smooth lengths without weighing them down.",
+   "ingredients": [
+    "Fermented rice water",
+    "Oat protein",
+    "Shea butter",
+    "Panthenol"
+   ],
+   "howto": "After shampoo, work through mid-lengths to ends, leave 2 minutes, rinse cool.",
+   "rating": 4.7,
+   "reviews": 184,
+   "image": "img/products/p02.webp",
+   "desc": "Fermented rice water and oat protein smooth lengths without weighing them down."
+  },
+  {
+   "id": "p03",
+   "slug": "sea-buckthorn-shine-shampoo",
+   "name": "Sea Buckthorn Shine Shampoo",
+   "category": "Shampoo",
+   "form": "flip",
+   "size": "250 ml",
+   "price": 699,
+   "mrp": 799,
+   "hairTypes": [
+    "Dry",
+    "Curly",
+    "Colour-treated"
+   ],
+   "concerns": [
+    "Shine",
+    "Repair"
+   ],
+   "stock": 12,
+   "badge": "Low stock",
+   "colors": {
+    "bottle": "#E9A35C",
+    "liquid": "#D9762E",
+    "cap": "#F4F1E8",
+    "label": "#F4F1E8",
+    "accent": "#C4602A"
+   },
+   "short": "A golden, gentle lather with sea buckthorn berry oil for glossy, bouncy hair.",
+   "ingredients": [
+    "Sea buckthorn berry oil",
+    "Amla",
+    "Glycerin",
+    "Sulphate-free surfactants"
+   ],
+   "howto": "Lather between palms, wash, rinse. Follow with a conditioner.",
+   "rating": 4.4,
+   "reviews": 36,
+   "image": "img/products/p03.webp",
+   "desc": "A golden, gentle lather with sea buckthorn berry oil for glossy, bouncy hair."
+  },
+  {
+   "id": "p04",
+   "slug": "aloe-oat-gentle-shampoo",
+   "name": "Aloe & Oat Gentle Shampoo",
+   "category": "Shampoo",
+   "form": "pump",
+   "size": "300 ml",
+   "price": 549,
+   "mrp": 599,
+   "hairTypes": [
+    "Fine",
+    "All"
+   ],
+   "concerns": [
+    "Scalp care"
+   ],
+   "stock": 120,
+   "badge": "",
+   "colors": {
+    "bottle": "#EEF2E6",
+    "liquid": "#DCE6CF",
+    "cap": "#8DB39A",
+    "label": "#FBFAF5",
+    "accent": "#6E9C7E"
+   },
+   "short": "Soap-free, low-foam wash for sensitive scalps and everyday use.",
+   "ingredients": [
+    "Aloe vera juice",
+    "Colloidal oat",
+    "Chamomile",
+    "Betaine"
+   ],
+   "howto": "Use a coin-sized amount on wet hair, massage gently, rinse.",
+   "rating": 4.8,
+   "reviews": 42,
+   "image": "img/products/p04.webp",
+   "desc": "Soap-free, low-foam wash for sensitive scalps and everyday use."
+  },
+  {
+   "id": "p05",
+   "slug": "camellia-hair-oil",
+   "name": "Camellia Pre-wash Oil",
+   "category": "Oil",
+   "form": "dropper",
+   "size": "50 ml",
+   "price": 799,
+   "mrp": 899,
+   "hairTypes": [
+    "Dry",
+    "Curly",
+    "Colour-treated"
+   ],
+   "concerns": [
+    "Shine",
+    "Frizz"
+   ],
+   "stock": 40,
+   "badge": "",
+   "colors": {
+    "bottle": "#E7B66E",
+    "liquid": "#C98A2E",
+    "cap": "#234A3A",
+    "label": "#F4F1E8",
+    "accent": "#B67A2A"
+   },
+   "short": "Cold-pressed camellia and bhringraj oil for a weekly scalp and length ritual.",
+   "ingredients": [
+    "Camellia seed oil",
+    "Bhringraj",
+    "Jojoba",
+    "Vitamin E"
+   ],
+   "howto": "Warm 6–8 drops between fingers, massage into scalp and ends, leave 30 minutes, wash.",
+   "rating": 4.6,
+   "reviews": 167,
+   "image": "img/products/p05.webp",
+   "desc": "Cold-pressed camellia and bhringraj oil for a weekly scalp and length ritual."
+  },
+  {
+   "id": "p06",
+   "slug": "shea-deep-repair-mask",
+   "name": "Shea Deep Repair Mask",
+   "category": "Mask",
+   "form": "jar",
+   "size": "200 g",
+   "price": 899,
+   "mrp": 999,
+   "hairTypes": [
+    "Dry",
+    "Curly",
+    "Colour-treated"
+   ],
+   "concerns": [
+    "Repair",
+    "Frizz"
+   ],
+   "stock": 33,
+   "badge": "",
+   "colors": {
+    "bottle": "#F6EFE2",
+    "liquid": "#F3E6CC",
+    "cap": "#D9764A",
+    "label": "#F6EFE2",
+    "accent": "#D9764A"
+   },
+   "short": "A rich weekly mask with shea, mango butter and hydrolysed keratin-free proteins.",
+   "ingredients": [
+    "Shea butter",
+    "Mango butter",
+    "Wheat protein",
+    "Argan oil"
+   ],
+   "howto": "Apply to towel-dried hair, comb through, leave 10 minutes, rinse well.",
+   "rating": 4.4,
+   "reviews": 147,
+   "image": "img/products/p06.webp",
+   "desc": "A rich weekly mask with shea, mango butter and hydrolysed keratin-free proteins."
+  },
+  {
+   "id": "p07",
+   "slug": "peppermint-scalp-scrub",
+   "name": "Peppermint Scalp Scrub",
+   "category": "Scalp",
+   "form": "jar",
+   "size": "150 g",
+   "price": 749,
+   "mrp": 849,
+   "hairTypes": [
+    "Oily",
+    "All"
+   ],
+   "concerns": [
+    "Scalp care",
+    "Volume"
+   ],
+   "stock": 8,
+   "badge": "Low stock",
+   "colors": {
+    "bottle": "#DDEDE6",
+    "liquid": "#A9D3C2",
+    "cap": "#234A3A",
+    "label": "#F4F1E8",
+    "accent": "#2F7A68"
+   },
+   "short": "Fine sea salt and peppermint oil lift build-up before your shampoo.",
+   "ingredients": [
+    "Fine sea salt",
+    "Peppermint oil",
+    "Salicylic acid 1%",
+    "Aloe"
+   ],
+   "howto": "On a wet scalp, massage small amounts in circles, rinse, then shampoo.",
+   "rating": 4.5,
+   "reviews": 27,
+   "image": "img/products/p07.webp",
+   "desc": "Fine sea salt and peppermint oil lift build-up before your shampoo."
+  },
+  {
+   "id": "p08",
+   "slug": "hibiscus-curl-cream",
+   "name": "Hibiscus Curl Cream",
+   "category": "Styling",
+   "form": "tube",
+   "size": "150 ml",
+   "price": 649,
+   "mrp": 699,
+   "hairTypes": [
+    "Curly",
+    "Dry"
+   ],
+   "concerns": [
+    "Frizz",
+    "Shine"
+   ],
+   "stock": 61,
+   "badge": "",
+   "colors": {
+    "bottle": "#F3D9D2",
+    "liquid": "#E9B3A6",
+    "cap": "#B5544A",
+    "label": "#F8ECE8",
+    "accent": "#B5544A"
+   },
+   "short": "Defines curls and coils with hibiscus, flaxseed gel and a soft, touchable hold.",
+   "ingredients": [
+    "Hibiscus flower",
+    "Flaxseed gel",
+    "Coconut oil",
+    "Glycerin"
+   ],
+   "howto": "Rake through soaking-wet hair in sections, scrunch, air-dry or diffuse.",
+   "rating": 4.4,
+   "reviews": 129,
+   "image": "img/products/p08.webp",
+   "desc": "Defines curls and coils with hibiscus, flaxseed gel and a soft, touchable hold."
+  },
+  {
+   "id": "p09",
+   "slug": "neem-leave-in-mist",
+   "name": "Neem & Tulsi Leave-in Mist",
+   "category": "Styling",
+   "form": "spray",
+   "size": "150 ml",
+   "price": 549,
+   "mrp": 599,
+   "hairTypes": [
+    "Fine",
+    "Oily",
+    "All"
+   ],
+   "concerns": [
+    "Scalp care",
+    "Frizz"
+   ],
+   "stock": 72,
+   "badge": "",
+   "colors": {
+    "bottle": "#D6E6EA",
+    "liquid": "#A8C9CF",
+    "cap": "#F4F1E8",
+    "label": "#F4F1E8",
+    "accent": "#3F7F8C"
+   },
+   "short": "A weightless detangling mist with neem, tulsi and heat protection to 200°C.",
+   "ingredients": [
+    "Neem leaf",
+    "Tulsi",
+    "Hydrolysed rice protein",
+    "Panthenol"
+   ],
+   "howto": "Mist over damp lengths, comb through, style as usual.",
+   "rating": 4.7,
+   "reviews": 35,
+   "image": "img/products/p09.webp",
+   "desc": "A weightless detangling mist with neem, tulsi and heat protection to 200°C."
+  },
+  {
+   "id": "p10",
+   "slug": "root-ritual-trio",
+   "name": "Root Ritual Trio",
+   "category": "Sets",
+   "form": "flip",
+   "size": "3 × 100 ml",
+   "price": 1299,
+   "mrp": 1597,
+   "hairTypes": [
+    "Oily",
+    "Fine",
+    "All"
+   ],
+   "concerns": [
+    "Scalp care",
+    "Volume"
+   ],
+   "stock": 25,
+   "badge": "Set",
+   "colors": {
+    "bottle": "#CFE1D3",
+    "liquid": "#7FA889",
+    "cap": "#D9764A",
+    "label": "#F4F1E8",
+    "accent": "#3E7A55"
+   },
+   "short": "Travel trio: Rosemary Root Shampoo, Rice Water Conditioner and the Leave-in Mist.",
+   "ingredients": [
+    "Rosemary leaf",
+    "Fermented rice water",
+    "Neem leaf"
+   ],
+   "howto": "Shampoo, condition, mist. Fits a cabin bag.",
+   "rating": 4.5,
+   "reviews": 41,
+   "image": "img/products/p10.webp",
+   "desc": "Travel trio: Rosemary Root Shampoo, Rice Water Conditioner and the Leave-in Mist."
+  }
+ ]
+}

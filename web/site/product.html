@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Product — Ferneau (concept)</title><meta name="description" content="Turn the bottle in 3D, read the ingredients and add it to your bag."><meta name="theme-color" content="#F4F1E8">
+<meta property="og:title" content="Product — Ferneau (concept)"><meta property="og:description" content="Turn the bottle in 3D, read the ingredients and add it to your bag."><meta property="og:image" content="/img/ui/og.jpg"><meta name="robots" content="noindex">
+<link rel="icon" href="/img/ui/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/fraunces-opsz.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/dmsans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/base.css"><link rel="stylesheet" href="/css/site.css"><script type="importmap">{"imports":{"three":"/vendor/three/three.module.min.js","three/addons/":"/vendor/three/addons/"}}</script></head><body>
+<main>
+<div class="wrap"><div class="pdp" id="pdp"><div class="viewer" id="viewer"><img class="fb" id="fb" alt=""><canvas id="pc" aria-label="3D view of the bottle. Drag to turn it."></canvas><span class="hint" id="hint">Drag to turn · 3D model</span></div><div class="pinfo" id="info"></div></div>
+<section style="padding-bottom:90px"><div class="sec-head"><h2 style="font-size:clamp(28px,3vw,44px)">Pairs <em class="i">well</em> with</h2></div><div class="grid" id="pairs"></div></section></div></main>
+<script type="module">
+import { mountChrome, card, wireCards, db, icon, toast, money, refreshBadges } from '/js/chrome.js';
+mountChrome();
+
+const id = new URLSearchParams(location.search).get('id') || 'p01'; const p = await db.getProduct(id);
+if (!p) { document.getElementById('pdp').innerHTML = '<div class="empty"><h2>Product not found</h2><p><a href="/shop.html">Back to the shop</a></p></div>'; throw 0; }
+document.title = p.name + ' — Ferneau (concept)';
+const fb = document.getElementById('fb'); fb.src = '/' + p.image; fb.alt = p.name + ' — 3D render';
+const wish = await db.getWishlist(); let qty = 1;
+document.getElementById('info').innerHTML = `
+ <a href="/shop.html?category=${p.category}" class="eyebrow" style="text-decoration:none">${p.category} · ${p.size}</a>
+ <h1>${p.name}</h1>
+ <span class="stars">★ ${p.rating} <span class="muted" style="font-weight:400">· ${p.reviews} sample ratings (demo data)</span></span>
+ <p class="lede" style="color:var(--ink2);font-size:18px">${p.short}</p>
+ <div><span class="price">${money(p.price)}</span><span class="mrp">${money(p.mrp)}</span> <span class="tag clay" style="margin-left:8px">${Math.round((1 - p.price / p.mrp) * 100)}% off</span></div>
+ <div style="display:flex;gap:8px;flex-wrap:wrap">${p.hairTypes.map((h) => `<span class="tag">${h}</span>`).join('')}${p.concerns.map((h) => `<span class="tag" style="background:var(--paper2)">${h}</span>`).join('')}</div>
+ <div class="muted" style="font-size:14px">${p.stock > 15 ? 'In stock, ships in 24 hours' : p.stock > 0 ? `Only ${p.stock} left in stock` : 'Out of stock'}</div>
+ <div class="buy"><div class="qty"><button id="qm" aria-label="Decrease quantity">${icon('minus', 18)}</button><span id="qv">1</span><button id="qp" aria-label="Increase quantity">${icon('plus', 18)}</button></div>
+  <button class="btn" id="add" ${p.stock ? '' : 'disabled'}>${icon('bag', 18)} Add to bag</button><button class="wishbtn" id="wish" aria-pressed="${wish.includes(p.id)}" aria-label="Save to wishlist">${icon('heart')}</button></div>
+ <div class="perks"><div>${icon('truck', 18)} Free shipping over ₹999</div><div>${icon('leaf', 18)} Refill pouch available</div><div>${icon('lock', 18)} Demo checkout, no charge</div></div>
+ <div><details class="acc" open><summary>Key ingredients</summary><ul>${p.ingredients.map((i) => `<li>${i}</li>`).join('')}</ul></details>
+ <details class="acc"><summary>How to use</summary><p>${p.howto}</p></details>
+ <details class="acc"><summary>Shipping &amp; returns</summary><p>Concept store: no real orders ship. In a live build this would hold delivery times and the returns policy.</p></details></div>`;
+const qv = document.getElementById('qv'); document.getElementById('qm').onclick = () => { qty = Math.max(1, qty - 1); qv.textContent = qty; }; document.getElementById('qp').onclick = () => { qty = Math.min(9, qty + 1); qv.textContent = qty; };
+document.getElementById('add').onclick = async () => { await db.addToCart(p.id, qty); toast(`${icon('check', 18)} ${qty} × ${p.name} added · <a href="/cart.html">View bag</a>`); };
+document.getElementById('wish').onclick = async (e) => { const on = await db.toggleWish(p.id); e.currentTarget.setAttribute('aria-pressed', on); toast(on ? 'Saved to wishlist' : 'Removed from wishlist'); };
+const all = await db.listProducts({}); const pairs = all.filter((x) => x.id !== p.id && x.hairTypes.some((h) => p.hairTypes.includes(h))).slice(0, 4);
+const pg = document.getElementById('pairs'); pg.innerHTML = pairs.map((x) => card(x, wish)).join(''); wireCards(pg);
+import('/js/viewer3d.js').then((m) => m.mount(document.getElementById('viewer'), document.getElementById('pc'), p)).catch(() => {});
+</script></body></html>

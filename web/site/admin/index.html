@@ -1,0 +1,79 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ferneau Admin — demo dashboard (concept)</title><meta name="description" content="Demo admin dashboard: products, inventory and orders for the Ferneau concept store."><meta name="theme-color" content="#F4F1E8">
+<meta property="og:title" content="Ferneau Admin — demo dashboard (concept)"><meta property="og:description" content="Demo admin dashboard: products, inventory and orders for the Ferneau concept store."><meta property="og:image" content="/img/ui/og.jpg"><meta name="robots" content="noindex">
+<link rel="icon" href="/img/ui/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/fraunces-opsz.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/dmsans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/base.css"><link rel="stylesheet" href="/css/site.css"><script type="importmap">{"imports":{"three":"/vendor/three/three.module.min.js","three/addons/":"/vendor/three/addons/"}}</script><style>
+body{background:#EEF2EC}.adm{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.side{background:var(--fern);color:#E7EFE8;padding:24px 18px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh}
+.side .logo{color:#F4F1E8;margin-bottom:6px;font-size:18px}.side small{color:#A9C7B4;font-size:12px;margin-bottom:22px;display:block}
+.side button{display:flex;gap:12px;align-items:center;height:44px;padding:0 14px;border-radius:12px;border:0;background:none;color:#D6E5DA;font-weight:500;cursor:pointer;text-align:left}.side button[aria-selected=true]{background:rgba(244,241,232,.14);color:#fff}.side button:hover{background:rgba(244,241,232,.08)}
+.side .foot{margin-top:auto;font-size:12px;color:#A9C7B4;display:grid;gap:8px}.side .foot a{color:#F6DCCD}
+.mainA{padding:28px 32px 60px;min-width:0}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}.top h1{font-size:40px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.kpi{background:var(--card);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}.kpi span{font-size:13px;color:var(--ink2)}.kpi b{display:block;font:560 32px/1.1 var(--f-d);margin-top:6px}.kpi small{color:var(--clay-ink);font-size:12px}
+.card2{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:20px;min-width:0}.card2 h3{margin-bottom:14px}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line)}td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+td img{width:44px;height:52px;object-fit:contain;background:var(--mist);border-radius:10px}.pn{display:flex;gap:12px;align-items:center;font-weight:600}
+.bar{height:8px;border-radius:4px;background:var(--paper2);overflow:hidden;min-width:120px}.bar i{display:block;height:100%;background:var(--fern);border-radius:4px}.bar.low i{background:var(--clay)}
+.sel.sm{height:36px;font-size:13px}.ab{border:0;background:none;color:var(--fern);font-weight:600;cursor:pointer;padding:6px 8px;border-radius:8px}.ab:hover{background:var(--mist)}.ab.del{color:#A3412F}
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:20px}.chart{display:flex;align-items:end;gap:10px;height:170px;padding-top:10px}.chart div{flex:1;background:var(--sage);border-radius:8px 8px 0 0;position:relative}.chart div:last-child{background:var(--fern)}.chart span{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--ink2)}
+.view{display:none}.view.on{display:block}
+@media (max-width:900px){.adm{grid-template-columns:1fr}.side{position:sticky;top:0;height:auto;flex-direction:row;flex-wrap:wrap;padding:12px;z-index:5;gap:4px;align-items:center}.side small,.side .foot{display:none}.side .logo{width:100%;margin:0 0 4px}.side button{height:38px;padding:0 12px;font-size:14px}
+ .mainA{padding:20px 16px 50px}.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.top h1{font-size:32px}}
+</style></head><body>
+<div class="concept-bar">Admin demo — concept project by Zyqor Studio, fictional brand. Data lives in this browser and is shared with the <a href="/">store</a> and the <a href="/app/">app</a>.</div>
+<div class="adm"><aside class="side" role="tablist" aria-label="Admin sections"><a class="logo" href="/">FERNEAU</a><small>Admin · demo data</small>
+ <button role="tab" aria-selected="true" data-v="dash">Dashboard</button><button role="tab" aria-selected="false" data-v="orders">Orders</button><button role="tab" aria-selected="false" data-v="products">Products</button><button role="tab" aria-selected="false" data-v="inv">Inventory</button>
+ <div class="foot"><a href="/">← Back to the store</a><button class="ab" id="reset" style="color:#F6DCCD;padding:0;justify-content:flex-start;height:auto">Reset demo data</button></div></aside>
+<main class="mainA">
+ <section class="view on" id="v-dash"><div class="top"><div><span class="eyebrow">Overview</span><h1>Good morning</h1></div><a class="btn sm" href="/shop.html" target="_blank" rel="noopener">Open store</a></div>
+  <div class="kpis" id="kpis"></div><div class="grid2"><div class="card2"><h3>Revenue, last 7 days (demo)</h3><div class="chart" id="chart"></div><div style="height:26px"></div></div><div class="card2"><h3>Low stock</h3><div id="low"></div></div></div>
+  <div class="card2" style="margin-top:20px"><h3>Latest orders</h3><div class="tw"><table id="latest"></table></div></div></section>
+ <section class="view" id="v-orders"><div class="top"><div><span class="eyebrow">Fulfilment</span><h1>Orders</h1></div><select class="sel" id="ofilter" aria-label="Filter by status"><option value="">All statuses</option></select></div><div class="card2"><div class="tw"><table id="otable"></table></div></div><p class="muted" style="font-size:13px;margin-top:12px">Change a status here and the customer's tracking page (web and app) updates live.</p></section>
+ <section class="view" id="v-products"><div class="top"><div><span class="eyebrow">Catalogue</span><h1>Products</h1></div><button class="btn sm" id="newp">+ Add product</button></div><div class="card2"><div class="tw"><table id="ptable"></table></div></div></section>
+ <section class="view" id="v-inv"><div class="top"><div><span class="eyebrow">Stock</span><h1>Inventory</h1></div></div><div class="card2"><div class="tw"><table id="itable"></table></div></div></section>
+</main></div>
+<div class="modal" id="pm" role="dialog" aria-modal="true" aria-labelledby="pmt"><form class="sheet" id="pform" style="width:min(560px,100%)"><h3 id="pmt">Edit product</h3>
+ <div class="form"><div class="field full"><label for="f_name">Name</label><input class="input" id="f_name" required></div>
+ <div class="field"><label for="f_category">Category</label><select class="input" id="f_category"></select></div><div class="field"><label for="f_size">Size</label><input class="input" id="f_size"></div>
+ <div class="field"><label for="f_price">Price (₹)</label><input class="input" id="f_price" type="number" min="1"></div><div class="field"><label for="f_mrp">MRP (₹)</label><input class="input" id="f_mrp" type="number" min="1"></div>
+ <div class="field"><label for="f_stock">Stock</label><input class="input" id="f_stock" type="number" min="0"></div><div class="field"><label for="f_badge">Badge</label><input class="input" id="f_badge" placeholder="New, Bestseller…"></div>
+ <div class="field full"><label for="f_short">Short description</label><input class="input" id="f_short"></div></div>
+ <span class="err" id="perr"></span><div style="display:flex;gap:10px;justify-content:flex-end"><button type="button" class="btn ghost sm" id="pcancel">Cancel</button><button class="btn sm">Save</button></div></form></div>
+<div class="toast" id="toast" role="status"></div>
+<script type="module">
+import * as db from '/js/db.js';
+const $ = (id) => document.getElementById(id); const money = db.money; const LOW = 15;
+const toast = (t) => { const e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove('on'), 2200); };
+document.querySelectorAll('.side [data-v]').forEach((b) => b.onclick = () => { document.querySelectorAll('.side [data-v]').forEach((x) => x.setAttribute('aria-selected', x === b)); document.querySelectorAll('.view').forEach((v) => v.classList.toggle('on', v.id === 'v-' + b.dataset.v)); });
+const opts = (sel) => [...db.STATUSES, 'cancelled'].map((s) => `<option value="${s}" ${s === sel ? 'selected' : ''}>${db.STATUS_LABEL[s]}</option>`).join('');
+$('ofilter').innerHTML += [...db.STATUSES, 'cancelled'].map((s) => `<option value="${s}">${db.STATUS_LABEL[s]}</option>`).join('');
+const fmt = (t) => new Date(t).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+const orow = (o) => `<tr><td><b>${o.id}</b>${o.demo ? '<br><span class="muted" style="font-size:12px">sample</span>' : ''}</td><td>${o.name}<br><span class="muted" style="font-size:12px">${o.email}</span></td><td>${o.items.map((i) => i.qty + ' × ' + i.name).join('<br>')}</td><td>${money(o.total)}<br><span class="muted" style="font-size:12px">${o.payment}</span></td><td>${fmt(o.createdAt)}</td><td><select class="sel sm" data-o="${o.id}" aria-label="Status of ${o.id}">${opts(o.status)}</select></td></tr>`;
+const ohead = '<tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Placed</th><th>Status</th></tr>';
+async function draw() {
+  const [os, ps] = await Promise.all([db.listOrders(), db.listProducts({})]);
+  const live = os.filter((o) => o.status !== 'cancelled'); const rev = live.reduce((s, o) => s + o.total, 0); const low = ps.filter((p) => p.stock < LOW);
+  $('kpis').innerHTML = `<div class="kpi"><span>Revenue (demo)</span><b>${money(rev)}</b><small>${live.length} paid orders</small></div><div class="kpi"><span>Orders to ship</span><b>${os.filter((o) => ['placed', 'packed'].includes(o.status)).length}</b><small>placed or packed</small></div><div class="kpi"><span>Average order</span><b>${money(Math.round(rev / Math.max(1, live.length)))}</b><small>incl. shipping</small></div><div class="kpi"><span>Low stock</span><b>${low.length}</b><small>under ${LOW} units</small></div>`;
+  const days = [...Array(7)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() - 6 + i); const k = d.toDateString(); return { l: d.toLocaleDateString('en-IN', { weekday: 'short' }), v: os.filter((o) => new Date(o.createdAt).toDateString() === k).reduce((s, o) => s + o.total, 0) }; });
+  const mx = Math.max(1, ...days.map((d) => d.v)); $('chart').innerHTML = days.map((d) => `<div style="height:${Math.max(4, (d.v / mx) * 100)}%" title="${money(d.v)}"><span>${d.l}</span></div>`).join('');
+  $('low').innerHTML = low.length ? low.map((p) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--line)"><span class="pn"><img src="/${p.image}" alt="" style="width:36px;height:42px;object-fit:contain;background:var(--mist);border-radius:8px">${p.name}</span><span><b style="color:var(--clay-ink)">${p.stock}</b> <button class="ab" data-restock="${p.id}">+20</button></span></div>`).join('') : '<p class="muted">All good.</p>';
+  $('latest').innerHTML = ohead + os.slice(0, 5).map(orow).join('');
+  const f = $('ofilter').value; $('otable').innerHTML = ohead + os.filter((o) => !f || o.status === f).map(orow).join('');
+  $('ptable').innerHTML = '<tr><th>Product</th><th>Category</th><th>Price</th><th>MRP</th><th>Stock</th><th></th></tr>' + ps.map((p) => `<tr><td><span class="pn"><img src="/${p.image}" alt="">${p.name}</span></td><td>${p.category}</td><td>${money(p.price)}</td><td class="muted">${money(p.mrp)}</td><td>${p.stock}</td><td style="white-space:nowrap"><button class="ab" data-edit="${p.id}">Edit</button><button class="ab del" data-del="${p.id}">Delete</button></td></tr>`).join('');
+  $('itable').innerHTML = '<tr><th>Product</th><th>Units</th><th>Level</th><th>Adjust</th></tr>' + ps.map((p) => `<tr><td><span class="pn"><img src="/${p.image}" alt="">${p.name}</span></td><td><b style="${p.stock < LOW ? 'color:var(--clay-ink)' : ''}">${p.stock}</b>${p.stock < LOW ? ' <span class="tag clay">Low</span>' : ''}</td><td><div class="bar ${p.stock < LOW ? 'low' : ''}"><i style="width:${Math.min(100, p.stock / 1.5)}%"></i></div></td><td style="white-space:nowrap"><button class="ab" data-adj="${p.id}" data-d="-1">−1</button><button class="ab" data-adj="${p.id}" data-d="1">+1</button><button class="ab" data-adj="${p.id}" data-d="20">+20</button></td></tr>`).join('');
+}
+document.body.addEventListener('change', async (e) => { const s = e.target.closest('[data-o]'); if (s) { await db.setOrderStatus(s.dataset.o, s.value); toast(`${s.dataset.o} → ${db.STATUS_LABEL[s.value]}`); draw(); } if (e.target.id === 'ofilter') draw(); });
+let editing = null; const F = ['name', 'category', 'size', 'price', 'mrp', 'stock', 'badge', 'short'];
+$('f_category').innerHTML = db.FILTERS.categories.filter((c) => c !== 'All').map((c) => `<option>${c}</option>`).join('');
+async function openForm(id) { editing = id; const p = id ? await db.getProduct(id) : { name: '', category: 'Shampoo', size: '250 ml', price: 599, mrp: 699, stock: 50, badge: 'New', short: '' }; F.forEach((k) => $('f_' + k).value = p[k] ?? ''); $('pmt').textContent = id ? 'Edit product' : 'Add product'; $('perr').textContent = ''; $('pm').classList.add('on'); $('f_name').focus(); }
+$('newp').onclick = () => openForm(null); $('pcancel').onclick = () => $('pm').classList.remove('on'); $('pm').addEventListener('click', (e) => { if (e.target.id === 'pm') $('pm').classList.remove('on'); });
+$('pform').onsubmit = async (e) => { e.preventDefault(); const v = {}; F.forEach((k) => v[k] = $('f_' + k).value.trim()); ['price', 'mrp', 'stock'].forEach((k) => v[k] = +v[k]); if (!v.name || !(v.price > 0)) { $('perr').textContent = 'Add a name and a price.'; return; } v.desc = v.short;
+  if (editing) await db.saveProduct({ id: editing, ...v }); else { const base = await db.getProduct('p04'); await db.saveProduct({ ...base, ...v, id: 'new', slug: v.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), reviews: 0, rating: 0 }); }
+  $('pm').classList.remove('on'); toast(editing ? 'Product saved' : 'Product added'); draw(); };
+document.body.addEventListener('click', async (e) => { const ed = e.target.closest('[data-edit]'), de = e.target.closest('[data-del]'), ad = e.target.closest('[data-adj]'), rs = e.target.closest('[data-restock]');
+  if (ed) openForm(ed.dataset.edit); if (de && confirm('Delete this product from the demo catalogue?')) { await db.deleteProduct(de.dataset.del); toast('Product deleted'); draw(); }
+  if (ad) { await db.adjustStock(ad.dataset.adj, +ad.dataset.d); draw(); } if (rs) { await db.adjustStock(rs.dataset.restock, 20); toast('Restocked +20'); draw(); } });
+$('reset').onclick = async () => { await db.resetDemo(); toast('Demo data reset'); draw(); };
+db.subscribe(() => draw()); draw();
+</script></body></html>

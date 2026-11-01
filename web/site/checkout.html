@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Checkout — Ferneau (concept)</title><meta name="description" content="Demo checkout: address and a simulated payment gateway. Nothing is charged."><meta name="theme-color" content="#F4F1E8">
+<meta property="og:title" content="Checkout — Ferneau (concept)"><meta property="og:description" content="Demo checkout: address and a simulated payment gateway. Nothing is charged."><meta property="og:image" content="/img/ui/og.jpg"><meta name="robots" content="noindex">
+<link rel="icon" href="/img/ui/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/fraunces-opsz.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/dmsans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/base.css"><link rel="stylesheet" href="/css/site.css"><script type="importmap">{"imports":{"three":"/vendor/three/three.module.min.js","three/addons/":"/vendor/three/addons/"}}</script></head><body>
+<main>
+<div class="wrap"><div class="page-head"><span class="eyebrow">Secure checkout · demo</span><h1 style="margin-top:12px">Check<em class="i">out</em></h1></div>
+<div class="two"><form id="f" novalidate style="display:grid;gap:26px">
+ <div class="demo-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span><b>Demo payment, no real charge.</b> This concept simulates a payment gateway (UPI, card or cash on delivery). Use any details; test card 4242 4242 4242 4242.</span></div>
+ <section class="panel" style="display:grid;gap:16px"><h3>Delivery address</h3><div class="form">
+  <div class="field"><label for="name">Full name</label><input class="input" id="name" autocomplete="name"><span class="err"></span></div>
+  <div class="field"><label for="phone">Phone</label><input class="input" id="phone" inputmode="tel" autocomplete="tel" placeholder="+91"><span class="err"></span></div>
+  <div class="field full"><label for="email">Email</label><input class="input" id="email" type="email" autocomplete="email"><span class="err"></span></div>
+  <div class="field full"><label for="address">Address</label><input class="input" id="address" autocomplete="street-address"><span class="err"></span></div>
+  <div class="field"><label for="city">City</label><input class="input" id="city" autocomplete="address-level2"><span class="err"></span></div>
+  <div class="field"><label for="pin">PIN code</label><input class="input" id="pin" inputmode="numeric" maxlength="6"><span class="err"></span></div></div></section>
+ <section class="panel" style="display:grid;gap:14px"><h3>Payment</h3><div class="pay" role="radiogroup" aria-label="Payment method">
+  <label><input type="radio" name="pm" value="UPI" checked><span>UPI<small>Pay with any UPI app (simulated)</small></span></label>
+  <label><input type="radio" name="pm" value="Card"><span>Credit / debit card<small>Test card 4242 4242 4242 4242</small></span></label>
+  <label><input type="radio" name="pm" value="Cash on delivery"><span>Cash on delivery<small>Pay when it arrives</small></span></label></div></section>
+</form>
+<aside class="panel summary" id="sum"></aside></div></div>
+<div class="modal" id="gw" role="dialog" aria-modal="true" aria-labelledby="gwt"><div class="sheet" id="gws"></div></div></main>
+<script type="module">
+import { mountChrome, card, wireCards, db, icon, toast, money, refreshBadges } from '/js/chrome.js';
+mountChrome();
+
+const $ = (id) => document.getElementById(id); const coupon = sessionStorage.getItem('fn.coupon') || '';
+const c = await db.cartDetail(coupon); if (!c.lines.length) location.replace('/cart.html');
+const u = await db.currentUser(); if (u) { $('name').value = u.name || ''; $('email').value = u.email || ''; $('phone').value = u.phone || ''; $('address').value = (u.address || '').split(',')[0] || ''; $('city').value = 'Kolkata'; $('pin').value = '700029'; }
+$('sum').innerHTML = `<h3>Your order</h3>${c.lines.map((l) => `<div class="r"><span>${l.qty} × ${l.product.name}</span><span>${money(l.product.price * l.qty)}</span></div>`).join('')}
+ ${c.discount ? `<div class="r" style="color:var(--clay-ink)"><span>ROOTS10</span><span>−${money(c.discount)}</span></div>` : ''}<div class="r"><span>Shipping</span><span>${c.shipping ? money(c.shipping) : 'Free'}</span></div>
+ <div class="r tot"><span>Total</span><span>${money(c.total)}</span></div><button class="btn clay" id="pay" form="f" type="submit">${icon('lock', 18)} Pay ${money(c.total)} (demo)</button><p class="muted" style="font-size:12.5px;text-align:center">No money moves. Orders appear in the demo admin.</p>`;
+const rules = { name: (v) => v.length > 1 || 'Enter your name', phone: (v) => /^[+0-9 ]{10,15}$/.test(v) || 'Enter a 10-digit phone number', email: (v) => /^\S+@\S+\.\S+$/.test(v) || 'Enter a valid email', address: (v) => v.length > 4 || 'Enter your street address', city: (v) => v.length > 1 || 'Enter your city', pin: (v) => /^\d{6}$/.test(v) || 'PIN codes have 6 digits' };
+function valid() { let ok = true; for (const k in rules) { const el = $(k); const r = rules[k](el.value.trim()); const bad = r !== true; el.classList.toggle('bad', bad); el.setAttribute('aria-invalid', bad); el.nextElementSibling.textContent = bad ? r : ''; if (bad && ok) { el.focus(); ok = false; } } return ok; }
+const gw = $('gw'), gws = $('gws'); const close = () => gw.classList.remove('on');
+gw.addEventListener('click', (e) => { if (e.target === gw) close(); }); addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+$('f').addEventListener('submit', (e) => {
+  e.preventDefault(); if (!valid()) return; const pm = document.querySelector('[name=pm]:checked').value;
+  const head = `<div class="gw-head"><b id="gwt">Ferneau Pay · demo gateway</b><span class="tag clay">Test mode</span></div><div><span class="muted" style="font-size:13px">Amount</span><div class="gw-amt">${money(c.total)}</div></div>`;
+  const body = pm === 'Card' ? `<div class="field"><label for="cn">Card number</label><input class="input" id="cn" inputmode="numeric" value="4242 4242 4242 4242"></div><div class="form"><div class="field"><label for="ce">Expiry</label><input class="input" id="ce" value="12/29"></div><div class="field"><label for="cv">CVV</label><input class="input" id="cv" value="123" inputmode="numeric"></div></div>`
+    : pm === 'UPI' ? `<div class="field"><label for="upi">UPI ID</label><input class="input" id="upi" value="demo@upi"></div><p class="muted" style="font-size:13px">In a live build this opens the customer's UPI app.</p>` : `<p class="muted">Cash on delivery: pay ${money(c.total)} when the parcel arrives.</p>`;
+  gws.innerHTML = head + body + `<span class="err" id="gerr"></span><button class="btn" id="go">${pm === 'Cash on delivery' ? 'Place order' : 'Pay ' + money(c.total)}</button><button class="btn ghost sm" id="cx" type="button">Cancel</button><p class="muted" style="font-size:12px;text-align:center">Simulated payment. Nothing is charged.</p>`;
+  gw.classList.add('on'); $('go').focus(); $('cx').onclick = close;
+  $('go').onclick = async () => {
+    if (pm === 'Card' && $('cn').value.replace(/\s/g, '') !== '4242424242424242') { $('gerr').textContent = 'Use the test card 4242 4242 4242 4242 in this demo.'; return; }
+    gws.innerHTML = head + '<div class="spin" role="progressbar" aria-label="Processing"></div><p style="text-align:center">Contacting the demo gateway…</p>';
+    const o = await db.placeOrder({ name: $('name').value.trim(), email: $('email').value.trim(), phone: $('phone').value.trim(), address: $('address').value.trim(), city: $('city').value.trim(), pin: $('pin').value.trim(), payment: pm === 'Cash on delivery' ? pm : 'Demo ' + pm, coupon });
+    sessionStorage.removeItem('fn.coupon'); localStorage.setItem('ferneau.lastOrder', JSON.stringify({ id: o.id, email: o.email }));
+    gws.innerHTML = `<div style="text-align:center;display:grid;gap:12px;justify-items:center"><div style="width:64px;height:64px;border-radius:50%;background:var(--fern);color:var(--paper);display:grid;place-items:center">${icon('check', 30)}</div><h3>Payment successful (demo)</h3><p class="muted">Order <b>${o.id}</b> is placed. Ref ${o.paymentRef}.</p><a class="btn" href="/track.html?id=${o.id}">Track your order</a></div>`;
+    refreshBadges();
+  };
+});
+</script></body></html>
